@@ -29,7 +29,7 @@ router.put("/:id", async (req, res) => {
     const cursoActualizado = await Curso.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!cursoActualizado) {
