@@ -39,18 +39,26 @@
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       }
+      .btn-guardar {
+        background-color: var(--verde-claro);
+        border: none;
+      }
+      .btn-guardar:hover {
+        background-color: var(--verde);
+      }
     </style>
   </head>
   <body>
     <nav class="navbar navbar-dark navbar-expand-lg">
       <div class="container">
-        <a class="navbar-brand fw-bold" href="../../index.html"
-          ><i class="bi bi-leaf-fill me-2"></i>HuellaCarbono DB</a
-        >
+        <!-- FIX: era ../../index.html, un nivel de más -->
+        <a class="navbar-brand fw-bold" href="../index.html">
+          <i class="bi bi-leaf-fill me-2"></i>HuellaCarbono DB
+        </a>
         <div class="navbar-nav ms-auto">
-          <a class="nav-link text-white" href="index.html"
-            ><i class="bi bi-arrow-left me-1"></i>Volver a Hábitos</a
-          >
+          <a class="nav-link text-white" href="index.html">
+            <i class="bi bi-arrow-left me-1"></i>Volver a Hábitos
+          </a>
         </div>
       </div>
     </nav>
@@ -59,18 +67,22 @@
       <h3 class="titulo-pagina mb-4" id="tituloFormulario">
         <i class="bi bi-heart-pulse-fill me-2"></i>Nuevo Hábito
       </h3>
+
       <div id="alerta" class="alert d-none" role="alert"></div>
+
       <div class="card card-form">
         <div class="card-body p-4">
+          <!-- FIX: type="number" porque en la BD es NumberInt -->
           <div class="mb-3">
             <label for="id_habito" class="form-label fw-semibold"
               >ID Hábito</label
             >
             <input
-              type="text"
+              type="number"
               class="form-control"
               id="id_habito"
-              placeholder="Ej: HAB001"
+              placeholder="Ej: 1"
+              min="1"
               required
             />
           </div>
@@ -83,23 +95,24 @@
               class="form-control"
               id="descripcion"
               rows="3"
-              placeholder="Ej: Reducir consumo de carne roja"
+              placeholder="Ej: Usar bicicleta para ir al trabajo"
               required
             ></textarea>
           </div>
 
+          <!-- FIX: valores en Title Case para que coincidan con los datos reales de la BD -->
           <div class="mb-3">
             <label for="categoria" class="form-label fw-semibold"
               >Categoría</label
             >
             <select class="form-select" id="categoria" required>
-              <option value="">Seleccione...</option>
-              <option value="alimentacion">Alimentación</option>
-              <option value="transporte">Transporte</option>
-              <option value="energia">Energía</option>
-              <option value="residuos">Residuos</option>
-              <option value="agua">Agua</option>
-              <option value="compras">Compras</option>
+              <option value="">Seleccione una categoría...</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Alimentación">Alimentación</option>
+              <option value="Energía">Energía</option>
+              <option value="Residuos">Residuos</option>
+              <option value="Agua">Agua</option>
+              <option value="Compras">Compras</option>
             </select>
           </div>
 
@@ -112,7 +125,7 @@
               class="form-control"
               id="puntos_eco"
               min="0"
-              placeholder="Ej: 10"
+              placeholder="Ej: 50"
               required
             />
           </div>
@@ -120,14 +133,14 @@
           <div class="d-flex gap-2">
             <button
               type="button"
-              class="btn btn-success flex-grow-1"
+              class="btn btn-guardar btn-success text-white flex-grow-1"
               id="btnGuardar"
             >
               <i class="bi bi-floppy-fill me-1"></i>Guardar
             </button>
-            <a href="index.html" class="btn btn-outline-secondary"
-              ><i class="bi bi-x-lg me-1"></i>Cancelar</a
-            >
+            <a href="index.html" class="btn btn-outline-secondary">
+              <i class="bi bi-x-lg me-1"></i>Cancelar
+            </a>
           </div>
         </div>
       </div>
@@ -138,14 +151,20 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
+
+    <!-- app.js provee todo lo necesario: guardarHabito, cargarHabitoEnFormulario,
+         obtenerIdDeURL, mostrarAlerta, redirigir, BASE_URL
+         No se necesitan overrides porque los campos coinciden exactamente con la BD -->
     <script src="../app.js"></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const id = obtenerIdDeURL();
 
         if (id) {
+          // FIX: era "Editar ábito" (faltaba la H)
           document.getElementById("tituloFormulario").innerHTML =
-            '<i class="bi bi-pencil-square me-2"></i>Editar ábito';
+            '<i class="bi bi-pencil-square me-2"></i>Editar Hábito';
           cargarHabitoEnFormulario(id);
         }
 
