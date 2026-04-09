@@ -34,7 +34,7 @@ app.use("/api/tipos-transporte", tipoTransporteRoutes);
 app.use("/api/alimentos", alimentoRoutes);
 app.use("/api/consumos-energia", consumoEnergiaRoutes);
 app.use("/api/habitos", habitoRoutes);
-app.use("/api/registros-diarios", registroDiarioRoutes);
+app.use("/api/registrosDiarios", registroDiarioRoutes);
 app.use("/api/calculos-co2", calculoCO2Routes);
 app.use("/api/retos", retoRoutes);
 app.use("/api/participaciones-retos", participacionRetoRoutes);
@@ -42,7 +42,8 @@ app.use("/api/recomendaciones", recomendacionRoutes);
 app.use("/api/categorias-retos", categoriaRetoRoutes);
 app.use("/api/factores-paises", factorPaisRoutes);
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB conectado");
     const PORT = process.env.PORT || 3000;

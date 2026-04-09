@@ -39,13 +39,6 @@
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       }
-      .btn-guardar {
-        background-color: var(--verde-claro);
-        border: none;
-      }
-      .btn-guardar:hover {
-        background-color: var(--verde);
-      }
     </style>
   </head>
   <body>
@@ -71,65 +64,77 @@
 
       <div class="card card-form">
         <div class="card-body p-4">
+          <!-- ID Reto -->
           <div class="mb-3">
-            <label for="id_reto" class="form-label fw-semibold">ID Reto</label>
+            <label for="id_reto" class="form-label fw-semibold">
+              ID Reto <span class="text-danger">*</span>
+            </label>
             <input
-              type="text"
+              type="number"
               class="form-control"
               id="id_reto"
-              placeholder="Ej: RETO001"
+              placeholder="Ej: 1"
+              min="1"
               required
             />
           </div>
 
+          <!-- Título -->
           <div class="mb-3">
-            <label for="titulo" class="form-label fw-semibold">Título</label>
+            <label for="titulo" class="form-label fw-semibold">
+              Título <span class="text-danger">*</span>
+            </label>
             <input
               type="text"
               class="form-control"
               id="titulo"
-              placeholder="Ej: 30 días sin plástico"
+              placeholder="Ej: Semana sin Plásticos"
               required
             />
           </div>
 
+          <!-- Duración -->
           <div class="mb-3">
-            <label for="duracion_dias" class="form-label fw-semibold"
-              >Duración (días)</label
-            >
-            <input
-              type="number"
-              class="form-control"
-              id="duracion_dias"
-              min="1"
-              placeholder="Ej: 30"
-              required
-            />
+            <label for="duracion_dias" class="form-label fw-semibold">
+              Duración (días) <span class="text-danger">*</span>
+            </label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                id="duracion_dias"
+                min="1"
+                placeholder="Ej: 7"
+                required
+              />
+              <span class="input-group-text">días</span>
+            </div>
           </div>
 
+          <!-- Dificultad -->
           <div class="mb-4">
-            <label for="dificultad" class="form-label fw-semibold"
-              >Dificultad</label
-            >
+            <label for="dificultad" class="form-label fw-semibold">
+              Dificultad <span class="text-danger">*</span>
+            </label>
             <select class="form-select" id="dificultad" required>
-              <option value="">Seleccione...</option>
-              <option value="facil">Fácil</option>
-              <option value="medio">Medio</option>
-              <option value="dificil">Difícil</option>
+              <option value="">— Seleccione —</option>
+              <option value="Fácil">Fácil</option>
+              <option value="Media">Media</option>
+              <option value="Difícil">Difícil</option>
             </select>
           </div>
 
           <div class="d-flex gap-2">
             <button
               type="button"
-              class="btn btn-guardar btn-success text-white flex-grow-1"
+              class="btn btn-success flex-grow-1"
               id="btnGuardar"
             >
               <i class="bi bi-floppy-fill me-1"></i>Guardar
             </button>
-            <a href="index.html" class="btn btn-outline-secondary"
-              ><i class="bi bi-x-lg me-1"></i>Cancelar</a
-            >
+            <a href="index.html" class="btn btn-outline-secondary">
+              <i class="bi bi-x-lg me-1"></i>Cancelar
+            </a>
           </div>
         </div>
       </div>

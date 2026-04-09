@@ -2,43 +2,30 @@ const mongoose = require("mongoose");
 
 const retoSchema = new mongoose.Schema(
   {
-    nombre: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    descripcion: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    categoriaRetoId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "CategoriaReto",
-      required: true
-    },
-    duracionDias: {
+    id_reto: {
       type: Number,
       required: true,
-      min: 1
+    },
+    titulo: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    duracion_dias: {
+      type: Number,
+      required: true,
+      min: 1,
     },
     dificultad: {
       type: String,
       required: true,
-      enum: ["Facil", "Media", "Dificil"]
+      enum: ["Fácil", "Media", "Difícil"],
     },
-    puntosRecompensa: {
-      type: Number,
-      default: 0,
-      min: 0
-    },
-    estado: {
-      type: String,
-      enum: ["Activo", "Inactivo"],
-      default: "Activo"
-    }
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    collection: "Retos",
+  },
 );
 
 module.exports = mongoose.model("Reto", retoSchema);

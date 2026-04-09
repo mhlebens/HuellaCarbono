@@ -189,11 +189,18 @@ function mostrarRetos(retos) {
   };
 
   retos.forEach((r) => {
-    const color = badgeColor[(r.dificultad || "").toLowerCase()] || "secondary";
+    const dif = (r.dificultad || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "");
+    const color =
+      { facil: "success", media: "warning text-dark", dificil: "danger" }[
+        dif
+      ] || "secondary";
     const fila = document.createElement("tr");
     fila.innerHTML = `
       <td>${r.id_reto || "—"}</td>
-      <td>${r.titulo}</td>
+      <td>${r.titulo || "—"}</td>
       <td>${r.duracion_dias} días</td>
       <td><span class="badge bg-${color}">${r.dificultad || "—"}</span></td>
       <td class="text-center">
@@ -210,14 +217,14 @@ function mostrarRetos(retos) {
 
 async function guardarReto(id) {
   const datos = {
-    id_reto: document.getElementById("id_reto")?.value.trim(),
+    id_reto: parseInt(document.getElementById("id_reto")?.value),
     titulo: document.getElementById("titulo")?.value.trim(),
     duracion_dias: parseInt(document.getElementById("duracion_dias")?.value),
     dificultad: document.getElementById("dificultad")?.value,
   };
 
   if (
-    !datos.id_reto ||
+    isNaN(datos.id_reto) ||
     !datos.titulo ||
     isNaN(datos.duracion_dias) ||
     !datos.dificultad
@@ -244,9 +251,9 @@ async function guardarReto(id) {
 async function cargarRetoEnFormulario(id) {
   try {
     const r = await apiFetch(`${BASE_URL}/retos/${id}`);
-    document.getElementById("id_reto").value = r.id_reto || "";
+    document.getElementById("id_reto").value = r.id_reto ?? "";
     document.getElementById("titulo").value = r.titulo || "";
-    document.getElementById("duracion_dias").value = r.duracion_dias || "";
+    document.getElementById("duracion_dias").value = r.duracion_dias ?? "";
     document.getElementById("dificultad").value = r.dificultad || "";
   } catch {
     mostrarAlerta("No se pudo cargar el reto.", "danger");

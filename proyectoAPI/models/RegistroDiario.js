@@ -1,82 +1,49 @@
 const mongoose = require("mongoose");
 
-const transporteSchema = new mongoose.Schema(
+const actividadesSchema = new mongoose.Schema(
   {
-    tipoTransporteId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "TipoTransporte"
-    },
-    distanciaKm: {
-      type: Number,
-      min: 0
-    },
-    emisionesCO2: {
+    km_recorridos: {
       type: Number,
       min: 0,
-      default: 0
-    }
-  },
-  { _id: false }
-);
-
-const alimentoRegistroSchema = new mongoose.Schema(
-  {
-    alimentoId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Alimento"
+      default: 0,
     },
-    cantidadKg: {
-      type: Number,
-      min: 0
+    tipo_transporte: {
+      type: String,
+      trim: true,
     },
-    emisionesCO2: {
+    ducha_minutos: {
       type: Number,
       min: 0,
-      default: 0
-    }
-  },
-  { _id: false }
-);
-
-const energiaRegistroSchema = new mongoose.Schema(
-  {
-    consumoEnergiaId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "ConsumoEnergia"
+      default: 0,
     },
-    cantidadConsumida: {
-      type: Number,
-      min: 0
-    },
-    emisionesCO2: {
-      type: Number,
-      min: 0,
-      default: 0
-    }
   },
-  { _id: false }
+  { _id: false },
 );
 
 const registroDiarioSchema = new mongoose.Schema(
   {
-    usuarioId: {
+    id_registro: {
+      type: Number,
+      required: true,
+    },
+    usuario_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Usuario",
-      required: true
+      required: true,
     },
     fecha: {
       type: Date,
-      required: true
+      required: true,
     },
-    transporte: [transporteSchema],
-    alimentos: [alimentoRegistroSchema],
-    energia: [energiaRegistroSchema],
-    observaciones: {
-      type: String,
-      trim: true
-    }
+    actividades: {
+      type: actividadesSchema,
+      default: {},
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    collection: "RegistrosDiarios",
+  },
 );
 
 module.exports = mongoose.model("RegistroDiario", registroDiarioSchema);

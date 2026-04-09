@@ -39,22 +39,11 @@
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       }
-      .actividad-item {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        margin-bottom: 8px;
-      }
-      .actividad-item input {
-        flex: 1;
-      }
-      .btn-add-act {
-        background-color: var(--verde-suave, #e8f5e9);
-        border: 1px dashed var(--verde-claro);
-        color: var(--verde);
-      }
-      .btn-add-act:hover {
-        background-color: #c8e6c9;
+      .seccion-actividades {
+        background-color: #e8f5e9;
+        border-radius: 8px;
+        padding: 16px;
+        border: 1px solid #c8e6c9;
       }
     </style>
   </head>
@@ -79,63 +68,99 @@
       <div id="alerta" class="alert d-none" role="alert"></div>
       <div class="card card-form">
         <div class="card-body p-4">
+          <!-- ID Registro -->
           <div class="mb-3">
             <label for="id_registro" class="form-label fw-semibold"
-              >ID Registro</label
+              >ID Registro <span class="text-danger">*</span></label
             >
             <input
-              type="text"
+              type="number"
               class="form-control"
               id="id_registro"
-              placeholder="Ej: REG001"
+              placeholder="Ej: 1"
               required
             />
           </div>
 
+          <!-- Usuario ID (ObjectId) -->
           <div class="mb-3">
             <label for="usuario_id" class="form-label fw-semibold"
-              >Usuario ID</label
+              >Usuario ID (ObjectId) <span class="text-danger">*</span></label
             >
             <input
               type="text"
-              class="form-control"
+              class="form-control font-monospace"
               id="usuario_id"
-              placeholder="Ej: USR001"
+              placeholder="Ej: 682abc123def456789012345"
               required
             />
+            <div class="form-text">
+              Pega el <code>_id</code> del usuario de MongoDB.
+            </div>
           </div>
 
-          <div class="mb-3">
-            <label for="fecha" class="form-label fw-semibold">Fecha</label>
+          <!-- Fecha -->
+          <div class="mb-4">
+            <label for="fecha" class="form-label fw-semibold"
+              >Fecha <span class="text-danger">*</span></label
+            >
             <input type="date" class="form-control" id="fecha" required />
           </div>
 
-          <!-- Actividades dinámicas -->
-          <div class="mb-4">
-            <label class="form-label fw-semibold">Actividades</label>
-            <div id="listaActividades">
-              <div class="actividad-item">
+          <!-- Actividades del día -->
+          <div class="seccion-actividades mb-4">
+            <p class="fw-semibold text-success mb-3">
+              <i class="bi bi-activity me-1"></i>Actividades del día
+            </p>
+
+            <div class="mb-3">
+              <label for="km_recorridos" class="form-label"
+                >Kilómetros recorridos</label
+              >
+              <div class="input-group">
                 <input
-                  type="text"
-                  class="form-control actividad-input"
-                  placeholder="Ej: Usé bicicleta al trabajo"
+                  type="number"
+                  class="form-control"
+                  id="km_recorridos"
+                  placeholder="0"
+                  min="0"
+                  step="0.1"
                 />
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-danger btn-quitar-act"
-                  title="Quitar"
-                >
-                  <i class="bi bi-dash-lg"></i>
-                </button>
+                <span class="input-group-text">km</span>
               </div>
             </div>
-            <button
-              type="button"
-              class="btn btn-add-act btn-sm mt-2 w-100"
-              id="btnAgregarActividad"
-            >
-              <i class="bi bi-plus-lg me-1"></i>Agregar actividad
-            </button>
+
+            <div class="mb-3">
+              <label for="tipo_transporte" class="form-label"
+                >Tipo de transporte</label
+              >
+              <select class="form-select" id="tipo_transporte">
+                <option value="">— Selecciona —</option>
+                <option value="Bicicleta">Bicicleta</option>
+                <option value="Caminata">Caminata</option>
+                <option value="Auto">Auto</option>
+                <option value="Autobús">Autobús</option>
+                <option value="Motocicleta">Motocicleta</option>
+                <option value="Tren">Tren</option>
+                <option value="Avión">Avión</option>
+              </select>
+            </div>
+
+            <div class="mb-1">
+              <label for="ducha_minutos" class="form-label"
+                >Duración de la ducha</label
+              >
+              <div class="input-group">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="ducha_minutos"
+                  placeholder="0"
+                  min="0"
+                />
+                <span class="input-group-text">minutos</span>
+              </div>
+            </div>
           </div>
 
           <div class="d-flex gap-2">
@@ -166,19 +191,14 @@
 
         if (id) {
           document.getElementById("tituloFormulario").innerHTML =
-            '<i class="bi bi-pencil-square me-2"></i>Editar Registro';
-          cargarRegistroEnFormulario(id); // ya reconstruye las filas de actividades
+            '<i class="bi bi-pencil-square me-2"></i>Editar Registro Diario';
+          cargarRegistroEnFormulario(id);
         } else {
           // Fecha de hoy por defecto
           document.getElementById("fecha").value = new Date()
             .toISOString()
             .split("T")[0];
-          agregarFilaActividad(""); // fila inicial vacía
         }
-
-        document
-          .getElementById("btnAgregarActividad")
-          .addEventListener("click", () => agregarFilaActividad(""));
 
         document
           .getElementById("btnGuardar")
