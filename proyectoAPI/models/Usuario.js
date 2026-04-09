@@ -1,36 +1,53 @@
 const mongoose = require("mongoose");
 
-const usuarioSchema = new mongoose.Schema(
+// Subdocumento para el campo perfil
+const perfilSchema = new mongoose.Schema(
   {
-    nombreCompleto: {
+    pais: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
-    correo: {
+    nivel_conciencia: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  { _id: false }, // perfil no necesita su propio _id
+);
+
+const usuarioSchema = new mongoose.Schema(
+  {
+    id_usuario: {
+      type: Number,
+      required: true,
+    },
+    nombre: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
       type: String,
       required: true,
       unique: true,
       trim: true,
-      lowercase: true
+      lowercase: true,
     },
-    pais: {
-      type: String,
+    fecha_registro: {
+      type: Date,
+      default: null,
+    },
+    perfil: {
+      type: perfilSchema,
       required: true,
-      trim: true
     },
-    nivelConcienciaEcologica: {
-      type: String,
-      required: true,
-      enum: ["Bajo", "Medio", "Alto"]
-    },
-    estado: {
-      type: String,
-      enum: ["Activo", "Inactivo"],
-      default: "Activo"
-    }
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    collection: "Usuarios",
+  },
 );
 
 module.exports = mongoose.model("Usuario", usuarioSchema);

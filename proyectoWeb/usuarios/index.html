@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <title>Usuarios - HuellaCarbono</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --verde: #2e7d32;
+        --verde-claro: #4caf50;
+      }
+      body {
+        background-color: #f1f8e9;
+      }
+      .navbar {
+        background-color: var(--verde) !important;
+      }
+      .btn-nuevo {
+        background-color: var(--verde-claro);
+        border: none;
+      }
+      .btn-nuevo:hover {
+        background-color: var(--verde);
+      }
+      .table thead {
+        background-color: var(--verde);
+        color: white;
+      }
+      .titulo-pagina {
+        color: var(--verde);
+        font-weight: 700;
+        border-left: 4px solid var(--verde-claro);
+        padding-left: 10px;
+      }
+      .card-tabla {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="../index.html">
+          <i class="bi bi-leaf-fill me-2"></i>HuellaCarbono DB
+        </a>
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link text-white" href="../index.html">
+            <i class="bi bi-grid-fill me-1"></i>Módulos
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container py-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="titulo-pagina mb-0">
+          <i class="bi bi-people-fill me-2"></i>Usuarios
+        </h3>
+        <a href="create.html" class="btn btn-nuevo btn-success text-white">
+          <i class="bi bi-plus-lg me-1"></i>Nuevo Usuario
+        </a>
+      </div>
+
+      <!-- Alerta de retroalimentación -->
+      <div id="alerta" class="alert d-none" role="alert"></div>
+
+      <div class="card card-tabla">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>ID Usuario</th>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Fecha Registro</th>
+                  <th>País</th>
+                  <th>Nivel Conciencia</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaUsuarios">
+                <tr>
+                  <td colspan="7" class="text-center py-4 text-muted">
+                    Cargando datos...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmación Eliminar -->
+    <div class="modal fade" id="modalEliminar" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar
+              Eliminación
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de que deseas eliminar este usuario? Esta acción no se
+            puede deshacer.
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="btnConfirmarEliminar"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- app.js provee: apiFetch, mostrarAlerta, confirmarEliminar, ejecutarEliminar, BASE_URL -->
+    <script src="../app.js"></script>
+
+    <script>
+      // Reemplaza mostrarUsuarios de app.js para manejar perfil como objeto anidado
+      // { pais: "Mexico", nivel_conciencia: "Principiante" }
+      function mostrarUsuarios(usuarios) {
+        const tabla = document.getElementById("tablaUsuarios");
+        if (!tabla) return;
+        tabla.innerHTML = "";
+
+        if (!usuarios.length) {
+          tabla.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">No hay usuarios registrados.</td></tr>`;
+          return;
+        }
+
+        usuarios.forEach((u) => {
+          const fecha = u.fecha_registro
+            ? new Date(u.fecha_registro).toLocaleDateString("es-CR")
+            : "—";
+          const pais = u.perfil?.pais || "—";
+          const nivelConciencia = u.perfil?.nivel_conciencia || "—";
+
+          const fila = document.createElement("tr");
+          fila.innerHTML = `
+            <td>${u.id_usuario ?? "—"}</td>
+            <td>${u.nombre}</td>
+            <td>${u.email}</td>
+            <td>${fecha}</td>
+            <td><span class="badge bg-info text-dark">${pais}</span></td>
+            <td><span class="badge bg-success">${nivelConciencia}</span></td>
+            <td class="text-center">
+              <a href="create.html?id=${u._id}" class="btn btn-sm btn-outline-warning me-1">
+                <i class="bi bi-pencil-fill"></i> Editar
+              </a>
+              <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${u._id}', 'usuarios')">
+                <i class="bi bi-trash-fill"></i> Eliminar
+              </button>
+            </td>`;
+          tabla.appendChild(fila);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", obtenerUsuarios);
+    </script>
+  </body>
+</html>

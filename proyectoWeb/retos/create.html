@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <title>Crear / Editar Reto - HuellaCarbono</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --verde: #2e7d32;
+        --verde-claro: #4caf50;
+      }
+      body {
+        background-color: #f1f8e9;
+      }
+      .navbar {
+        background-color: var(--verde) !important;
+      }
+      .titulo-pagina {
+        color: var(--verde);
+        font-weight: 700;
+        border-left: 4px solid var(--verde-claro);
+        padding-left: 10px;
+      }
+      .card-form {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+      .btn-guardar {
+        background-color: var(--verde-claro);
+        border: none;
+      }
+      .btn-guardar:hover {
+        background-color: var(--verde);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="../../index.html"
+          ><i class="bi bi-leaf-fill me-2"></i>HuellaCarbono DB</a
+        >
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link text-white" href="index.html"
+            ><i class="bi bi-arrow-left me-1"></i>Volver a Retos</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <div class="container py-4" style="max-width: 640px">
+      <h3 class="titulo-pagina mb-4" id="tituloFormulario">
+        <i class="bi bi-trophy-fill me-2"></i>Nuevo Reto
+      </h3>
+
+      <div id="alerta" class="alert d-none" role="alert"></div>
+
+      <div class="card card-form">
+        <div class="card-body p-4">
+          <div class="mb-3">
+            <label for="id_reto" class="form-label fw-semibold">ID Reto</label>
+            <input
+              type="text"
+              class="form-control"
+              id="id_reto"
+              placeholder="Ej: RETO001"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="titulo" class="form-label fw-semibold">Título</label>
+            <input
+              type="text"
+              class="form-control"
+              id="titulo"
+              placeholder="Ej: 30 días sin plástico"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="duracion_dias" class="form-label fw-semibold"
+              >Duración (días)</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="duracion_dias"
+              min="1"
+              placeholder="Ej: 30"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="dificultad" class="form-label fw-semibold"
+              >Dificultad</label
+            >
+            <select class="form-select" id="dificultad" required>
+              <option value="">Seleccione...</option>
+              <option value="facil">Fácil</option>
+              <option value="medio">Medio</option>
+              <option value="dificil">Difícil</option>
+            </select>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button
+              type="button"
+              class="btn btn-guardar btn-success text-white flex-grow-1"
+              id="btnGuardar"
+            >
+              <i class="bi bi-floppy-fill me-1"></i>Guardar
+            </button>
+            <a href="index.html" class="btn btn-outline-secondary"
+              ><i class="bi bi-x-lg me-1"></i>Cancelar</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const id = obtenerIdDeURL();
+
+        if (id) {
+          document.getElementById("tituloFormulario").innerHTML =
+            '<i class="bi bi-pencil-square me-2"></i>Editar Reto';
+          cargarRetoEnFormulario(id);
+        }
+
+        document
+          .getElementById("btnGuardar")
+          .addEventListener("click", () => guardarReto(id));
+      });
+    </script>
+  </body>
+</html>
