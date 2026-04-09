@@ -2,33 +2,31 @@ const mongoose = require("mongoose");
 
 const recomendacionSchema = new mongoose.Schema(
   {
-    titulo: {
+    id_recomendacion: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
+    tipo: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
-    categoria: {
+    texto: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
-    descripcion: {
+    impacto_estimado: {
       type: String,
       required: true,
-      trim: true
+      enum: ["Bajo", "Medio", "Alto"],
     },
-    nivelImpacto: {
-      type: String,
-      required: true,
-      enum: ["Bajo", "Medio", "Alto"]
-    },
-    estado: {
-      type: String,
-      enum: ["Activo", "Inactivo"],
-      default: "Activo"
-    }
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    collection: "Recomendaciones",
+  },
 );
 
 module.exports = mongoose.model("Recomendacion", recomendacionSchema);

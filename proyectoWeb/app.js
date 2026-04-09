@@ -360,7 +360,7 @@ async function cargarHabitoEnFormulario(id) {
 
 async function obtenerTiposTransporte() {
   try {
-    const tipos = await apiFetch(`${BASE_URL}/tiposTransporte`);
+    const tipos = await apiFetch(`${BASE_URL}/tipos-transporte`);
     mostrarTiposTransporte(tipos);
   } catch {
     mostrarAlerta(
@@ -381,17 +381,20 @@ function mostrarTiposTransporte(tipos) {
   }
 
   tipos.forEach((t) => {
-    const factor = parseFloat(t.factor_emision).toFixed(4);
+    // Aseguramos que el factor sea numérico antes de usar toFixed
+    const factor = t.factor_emision
+      ? parseFloat(t.factor_emision).toFixed(4)
+      : "0.0000";
     const fila = document.createElement("tr");
     fila.innerHTML = `
       <td>${t.id_transporte || "—"}</td>
       <td>${t.nombre}</td>
       <td><span class="badge bg-warning text-dark">${factor}</span></td>
       <td class="text-center">
-        <a href="create.html?id=${t._id}" class="btn btn-sm btn-outline-warning me-1">
+        <a href="create.html?id=${t.id_transporte}" class="btn btn-sm btn-outline-warning me-1">
           <i class="bi bi-pencil-fill"></i> Editar
         </a>
-        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${t._id}', 'tiposTransporte')">
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${t.id_transporte}', 'tiposTransporte')">
           <i class="bi bi-trash-fill"></i> Eliminar
         </button>
       </td>`;
@@ -400,46 +403,67 @@ function mostrarTiposTransporte(tipos) {
 }
 
 async function guardarTipoTransporte(id) {
+  // Obtenemos los valores y nos aseguramos de que los números sean números
+  const idNum = document.getElementById("id_transporte")?.value.trim();
+  const factorVal = document.getElementById("factor_emision")?.value;
+
   const datos = {
-    id_transporte: document.getElementById("id_transporte")?.value.trim(),
+    id_transporte: parseInt(idNum), // Convertir a número
     nombre: document.getElementById("nombre")?.value.trim(),
-    factor_emision: parseFloat(
-      document.getElementById("factor_emision")?.value,
-    ),
+    factor_emision: parseFloat(factorVal), // Convertir a número
   };
 
-  if (!datos.id_transporte || !datos.nombre || isNaN(datos.factor_emision)) {
-    mostrarAlerta("Por favor completa todos los campos.", "danger");
+  // Validación básica
+  if (
+    isNaN(datos.id_transporte) ||
+    !datos.nombre ||
+    isNaN(datos.factor_emision)
+  ) {
+    mostrarAlerta(
+      "Por favor completa todos los campos con valores válidos.",
+      "danger",
+    );
     return;
   }
 
   try {
+    // Si hay 'id', la URL será /api/tiposTransporte/1 (por ejemplo)
     const url = id
-      ? `${BASE_URL}/tiposTransporte/${id}`
-      : `${BASE_URL}/tiposTransporte`;
+      ? `${BASE_URL}/tipos-transporte/${id}`
+      : `${BASE_URL}/tipos-transporte`;
+
     const method = id ? "PUT" : "POST";
+
     await apiFetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(datos),
     });
+
     mostrarAlerta(
       id ? "Tipo de transporte actualizado." : "Tipo de transporte creado.",
     );
     redirigir("index.html");
-  } catch {
-    mostrarAlerta("Error al guardar.", "danger");
+  } catch (error) {
+    console.error(error);
+    mostrarAlerta("Error al guardar en el servidor.", "danger");
   }
 }
 
 async function cargarTransporteEnFormulario(id) {
   try {
-    const t = await apiFetch(`${BASE_URL}/tiposTransporte/${id}`);
-    document.getElementById("id_transporte").value = t.id_transporte || "";
-    document.getElementById("nombre").value = t.nombre || "";
-    document.getElementById("factor_emision").value = t.factor_emision ?? "";
-  } catch {
-    mostrarAlerta("No se pudo cargar el tipo de transporte.", "danger");
+    const t = await apiFetch(`${BASE_URL}/tipos-transporte/${id}`);
+
+    if (t) {
+      document.getElementById("id_transporte").value = t.id_transporte || "";
+      document.getElementById("nombre").value = t.nombre || "";
+      document.getElementById("factor_emision").value = t.factor_emision ?? "";
+
+      // Opcional: Bloquear el id_transporte si estás editando para que no lo cambien
+      document.getElementById("id_transporte").readOnly = true;
+    }
+  } catch (error) {
+    mostrarAlerta("No se pudo obtener la información para editar.", "danger");
   }
 }
 
