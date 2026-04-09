@@ -1,25 +1,23 @@
 const mongoose = require("mongoose");
 
-const usuarioSchema = new mongoose.Schema(
+const recomendacionSchema = new mongoose.Schema(
   {
-    nombreCompleto: {
+    titulo: {
       type: String,
       required: true,
       trim: true
     },
-    correo: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      lowercase: true
-    },
-    pais: {
+    categoria: {
       type: String,
       required: true,
       trim: true
     },
-    nivelConcienciaEcologica: {
+    descripcion: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    nivelImpacto: {
       type: String,
       required: true,
       enum: ["Bajo", "Medio", "Alto"]
@@ -33,4 +31,4 @@ const usuarioSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Usuario", usuarioSchema);
+module.exports = mongoose.model("Recomendacion", recomendacionSchema);

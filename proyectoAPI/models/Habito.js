@@ -1,28 +1,26 @@
 const mongoose = require("mongoose");
 
-const usuarioSchema = new mongoose.Schema(
+const habitoSchema = new mongoose.Schema(
   {
-    nombreCompleto: {
+    nombre: {
       type: String,
       required: true,
       trim: true
     },
-    correo: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      lowercase: true
-    },
-    pais: {
+    categoria: {
       type: String,
       required: true,
       trim: true
     },
-    nivelConcienciaEcologica: {
+    descripcion: {
       type: String,
       required: true,
-      enum: ["Bajo", "Medio", "Alto"]
+      trim: true
+    },
+    puntosEco: {
+      type: Number,
+      required: true,
+      min: 0
     },
     estado: {
       type: String,
@@ -33,4 +31,4 @@ const usuarioSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Usuario", usuarioSchema);
+module.exports = mongoose.model("Habito", habitoSchema);

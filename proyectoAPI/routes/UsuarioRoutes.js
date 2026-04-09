@@ -12,43 +12,16 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET - usuarios activos
-router.get("/activos", async (req, res) => {
+// GET - obtener usuario por ID
+router.get("/:id", async (req, res) => {
   try {
-    const usuarios = await Usuario.find({ estado: "Activo" });
-    res.json(usuarios);
+    const usuario = await Usuario.findById(req.params.id);
+    if (!usuario) {
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+    }
+    res.json(usuario);
   } catch (error) {
-    res.status(500).json({ mensaje: "Error al obtener usuarios activos", error: error.message });
-  }
-});
-
-// GET - usuarios por país
-router.get("/pais/:pais", async (req, res) => {
-  try {
-    const usuarios = await Usuario.find({ pais: req.params.pais });
-    res.json(usuarios);
-  } catch (error) {
-    res.status(500).json({ mensaje: "Error al filtrar usuarios por país", error: error.message });
-  }
-});
-
-// GET - promedio por nivel de conciencia ecológica
-router.get("/resumen/nivel-conciencia", async (req, res) => {
-  try {
-    const resumen = await Usuario.aggregate([
-      {
-        $group: {
-          _id: "$nivelConcienciaEcologica",
-          totalUsuarios: { $sum: 1 }
-        }
-      },
-      {
-        $sort: { totalUsuarios: -1 }
-      }
-    ]);
-    res.json(resumen);
-  } catch (error) {
-    res.status(500).json({ mensaje: "Error al generar resumen", error: error.message });
+    res.status(500).json({ mensaje: "Error al obtener usuario", error: error.message });
   }
 });
 
@@ -97,4 +70,3 @@ router.delete("/:id", async (req, res) => {
 });
 
 module.exports = router;
-
