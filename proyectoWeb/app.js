@@ -697,6 +697,106 @@ function agregarFilaActividad(valor = "") {
 }
 
 // ============================================================
+//  MÓDULO: ALIMENTOS
+//  Colección: Alimentos
+//  Campos: id_alimento, categoria, impacto_alto, co2_por_kg
+// ============================================================
+
+async function obtenerAlimentos() {
+  try {
+    const alimentos = await apiFetch(`${BASE_URL}/alimentos`);
+    mostrarAlimentos(alimentos);
+  } catch {
+    mostrarAlerta(
+      "Error al cargar los alimentos. ¿Está corriendo el servidor?",
+      "danger",
+    );
+  }
+}
+
+function mostrarAlimentos(alimentos) {
+  const tabla = document.getElementById("tablaAlimentos");
+  if (!tabla) return;
+  tabla.innerHTML = "";
+
+  if (!alimentos.length) {
+    tabla.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">No hay alimentos registrados.</td></tr>`;
+    return;
+  }
+
+  alimentos.forEach((a) => {
+    const co2 = a.co2_por_kg != null ? parseFloat(a.co2_por_kg).toFixed(2) : "0.00";
+    const impactoBadge = a.impacto_alto
+      ? `<span class="badge bg-danger">Sí</span>`
+      : `<span class="badge bg-secondary">No</span>`;
+
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${a.id_alimento ?? "—"}</td>
+      <td><span class="badge bg-info text-dark">${a.categoria || "—"}</span></td>
+      <td><span class="fw-semibold text-success">${co2} kg</span></td>
+      <td>${impactoBadge}</td>
+      <td class="text-center">
+        <a href="create.html?id=${a._id}" class="btn btn-sm btn-outline-warning me-1">
+          <i class="bi bi-pencil-fill"></i> Editar
+        </a>
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${a._id}', 'alimentos')">
+          <i class="bi bi-trash-fill"></i> Eliminar
+        </button>
+      </td>`;
+    tabla.appendChild(fila);
+  });
+}
+
+async function guardarAlimento(id) {
+  const datos = {
+    id_alimento: parseInt(document.getElementById("id_alimento")?.value),
+    categoria: document.getElementById("categoria")?.value.trim(),
+    impacto_alto: document.getElementById("impacto_alto")?.value === "true",
+    co2_por_kg: parseFloat(document.getElementById("co2_por_kg")?.value),
+  };
+
+  if (
+    isNaN(datos.id_alimento) ||
+    !datos.categoria ||
+    isNaN(datos.co2_por_kg) ||
+    document.getElementById("impacto_alto")?.value === ""
+  ) {
+    mostrarAlerta("Por favor completa todos los campos.", "danger");
+    return;
+  }
+
+  try {
+    const url = id ? `${BASE_URL}/alimentos/${id}` : `${BASE_URL}/alimentos`;
+    const method = id ? "PUT" : "POST";
+
+    await apiFetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos),
+    });
+
+    mostrarAlerta(id ? "Alimento actualizado." : "Alimento creado.");
+    redirigir("index.html");
+  } catch {
+    mostrarAlerta("Error al guardar el alimento.", "danger");
+  }
+}
+
+async function cargarAlimentoEnFormulario(id) {
+  try {
+    const a = await apiFetch(`${BASE_URL}/alimentos/${id}`);
+    document.getElementById("id_alimento").value = a.id_alimento ?? "";
+    document.getElementById("categoria").value = a.categoria || "";
+    document.getElementById("co2_por_kg").value = a.co2_por_kg ?? "";
+    document.getElementById("impacto_alto").value =
+      a.impacto_alto === true ? "true" : "false";
+  } catch {
+    mostrarAlerta("No se pudo cargar el alimento.", "danger");
+  }
+}
+
+// ============================================================
 //  ELIMINAR — función genérica usada por todos los módulos
 // ============================================================
 
@@ -735,6 +835,7 @@ async function ejecutarEliminar() {
       usuarios: obtenerUsuarios,
       retos: obtenerRetos,
       habitos: obtenerHabitos,
+      alimentos: obtenerAlimentos,
       tiposTransporte: obtenerTiposTransporte,
       recomendaciones: obtenerRecomendaciones,
       registrosDiarios: obtenerRegistrosDiarios,
