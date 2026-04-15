@@ -2,33 +2,34 @@ const mongoose = require("mongoose");
 
 const calculoCO2Schema = new mongoose.Schema(
   {
-    usuarioId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Usuario",
+    id_calculo: {
+      type: Number,
       required: true
     },
-    periodo: {
+    usuario_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true
+    },
+    mes: {
       type: String,
       required: true,
       trim: true
     },
-    totalCO2: {
+    total_emisiones: {
       type: Number,
       required: true,
       min: 0
     },
-    categoriaMayorImpacto: {
+    unidad: {
       type: String,
+      required: true,
       trim: true
-    },
-    recomendacionesGeneradas: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Recomendacion"
-      }
-    ]
+    }
   },
-  { timestamps: true }
+  {
+    timestamps: false,
+    collection: "CalculosCO2"
+  }
 );
 
 module.exports = mongoose.model("CalculoCO2", calculoCO2Schema);

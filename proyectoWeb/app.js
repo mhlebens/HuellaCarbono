@@ -725,7 +725,8 @@ function mostrarAlimentos(alimentos) {
   }
 
   alimentos.forEach((a) => {
-    const co2 = a.co2_por_kg != null ? parseFloat(a.co2_por_kg).toFixed(2) : "0.00";
+    const co2 =
+      a.co2_por_kg != null ? parseFloat(a.co2_por_kg).toFixed(2) : "0.00";
     const impactoBadge = a.impacto_alto
       ? `<span class="badge bg-danger">Sí</span>`
       : `<span class="badge bg-secondary">No</span>`;
@@ -797,6 +798,150 @@ async function cargarAlimentoEnFormulario(id) {
 }
 
 // ============================================================
+//  MÓDULO: CÁLCULOS CO2
+//  Colección: CalculosCO2
+//  Campos: id_calculo, usuario_id, mes, total_emisiones, unidad
+// ============================================================
+
+async function obtenerCalculosCO2() {
+  try {
+    const [calculos, usuarios] = await Promise.all([
+      apiFetch(`${BASE_URL}/calculos-co2`),
+      apiFetch(`${BASE_URL}/usuarios`),
+    ]);
+
+    const mapaUsuarios = {};
+    usuarios.forEach((u) => {
+      mapaUsuarios[u._id] = u.nombre || u.email || "Usuario sin nombre";
+    });
+
+    mostrarCalculosCO2(calculos, mapaUsuarios);
+  } catch {
+    mostrarAlerta(
+      "Error al cargar los cálculos CO2. ¿Está corriendo el servidor?",
+      "danger",
+    );
+  }
+}
+
+async function cargarUsuariosEnSelect(idSelect) {
+  const select = document.getElementById(idSelect);
+  if (!select) return;
+
+  try {
+    const usuarios = await apiFetch(`${BASE_URL}/usuarios`);
+    select.innerHTML = `<option value="">Seleccione un usuario...</option>`;
+
+    if (!usuarios.length) {
+      select.innerHTML = `<option value="">No hay usuarios registrados</option>`;
+      return;
+    }
+
+    usuarios.forEach((u) => {
+      const option = document.createElement("option");
+      option.value = u._id;
+      option.textContent = `${u.nombre} (${u.email || "sin correo"})`;
+      select.appendChild(option);
+    });
+  } catch {
+    select.innerHTML = `<option value="">Error al cargar usuarios</option>`;
+  }
+}
+
+function mostrarCalculosCO2(calculos, mapaUsuarios = {}) {
+  const tabla = document.getElementById("tablaCalculosCO2");
+  if (!tabla) return;
+  tabla.innerHTML = "";
+
+  if (!calculos.length) {
+    tabla.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No hay cálculos CO2 registrados.</td></tr>`;
+    return;
+  }
+
+  calculos.forEach((c) => {
+    const total =
+      c.total_emisiones != null
+        ? parseFloat(c.total_emisiones).toFixed(2)
+        : "0.00";
+
+    const nombreUsuario =
+      mapaUsuarios[c.usuario_id] || c.usuario_id || "Usuario no encontrado";
+
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${c.id_calculo ?? "—"}</td>
+      <td>${nombreUsuario}</td>
+      <td><span class="badge bg-info text-dark">${c.mes || "—"}</span></td>
+      <td><span class="fw-semibold text-success">${total}</span></td>
+      <td>${c.unidad || "kg"}</td>
+      <td class="text-center">
+        <a href="create.html?id=${c._id}" class="btn btn-sm btn-outline-warning me-1">
+          <i class="bi bi-pencil-fill"></i> Editar
+        </a>
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${c._id}', 'calculos-co2')">
+          <i class="bi bi-trash-fill"></i> Eliminar
+        </button>
+      </td>`;
+    tabla.appendChild(fila);
+  });
+}
+
+async function guardarCalculoCO2(id) {
+  const datos = {
+    id_calculo: parseInt(document.getElementById("id_calculo")?.value),
+    usuario_id: document.getElementById("usuario_id")?.value,
+    mes: document.getElementById("mes")?.value.trim(),
+    total_emisiones: parseFloat(
+      document.getElementById("total_emisiones")?.value,
+    ),
+    unidad: "kg",
+  };
+
+  if (
+    isNaN(datos.id_calculo) ||
+    !datos.usuario_id ||
+    !datos.mes ||
+    isNaN(datos.total_emisiones)
+  ) {
+    mostrarAlerta("Por favor completa todos los campos.", "danger");
+    return;
+  }
+
+  try {
+    const url = id
+      ? `${BASE_URL}/calculos-co2/${id}`
+      : `${BASE_URL}/calculos-co2`;
+
+    const method = id ? "PUT" : "POST";
+
+    await apiFetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos),
+    });
+
+    mostrarAlerta(id ? "Cálculo CO2 actualizado." : "Cálculo CO2 creado.");
+    redirigir("index.html");
+  } catch {
+    mostrarAlerta("Error al guardar el cálculo CO2.", "danger");
+  }
+}
+
+async function cargarCalculoCO2EnFormulario(id) {
+  try {
+    const c = await apiFetch(`${BASE_URL}/calculos-co2/${id}`);
+
+    document.getElementById("id_calculo").value = c.id_calculo ?? "";
+    document.getElementById("usuario_id").value = c.usuario_id || "";
+    document.getElementById("mes").value = c.mes || "";
+    document.getElementById("total_emisiones").value = c.total_emisiones ?? "";
+    document.getElementById("unidad").value = c.unidad || "kg";
+  } catch {
+    mostrarAlerta("No se pudo cargar el cálculo CO2.", "danger");
+  }
+}
+
+// ============================================================
 //  ELIMINAR — función genérica usada por todos los módulos
 // ============================================================
 
@@ -839,6 +984,7 @@ async function ejecutarEliminar() {
       tiposTransporte: obtenerTiposTransporte,
       recomendaciones: obtenerRecomendaciones,
       registrosDiarios: obtenerRegistrosDiarios,
+      "calculos-co2": obtenerCalculosCO2,
     };
     if (_callbackLista) _callbackLista();
     else if (recargadores[_colEliminar]) recargadores[_colEliminar]();
