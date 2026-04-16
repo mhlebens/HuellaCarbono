@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 
+// // 2. Colección TiposTransporte (Colección maestra para opciones)
+// db.TiposTransporte.insertOne({
+//   id_transporte: 1,
+//   nombre: "Automóvil Eléctrico",
+//   factor_emision: 0.05 // kg CO2 por km
+// });
+
 const tipoTransporteSchema = new mongoose.Schema(
   {
     id_transporte: {

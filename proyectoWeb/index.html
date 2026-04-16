@@ -22,63 +22,122 @@
         --verde: #2e7d32;
         --verde-claro: #4caf50;
         --verde-suave: #e8f5e9;
+        --texto-oscuro: #1b5e20;
       }
       body {
         background-color: #f1f8e9;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          "Helvetica Neue",
+          "Noto Sans",
+          "Liberation Sans",
+          Arial,
+          sans-serif;
       }
       .navbar {
         background-color: var(--verde) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
       .navbar-brand {
         font-weight: 700;
         font-size: 1.4rem;
+        letter-spacing: 0.5px;
       }
+
+      /* Header del Dashboard */
+      .dashboard-header {
+        background: linear-gradient(
+          135deg,
+          var(--verde) 0%,
+          var(--verde-claro) 100%
+        );
+        color: white;
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 8px 24px rgba(46, 125, 50, 0.15);
+      }
+      .dashboard-header h2 {
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+      }
+      .dashboard-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin: 0;
+      }
+
+      /* Tarjetas de Módulos */
       .card-modulo {
         border: none;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
+        border-radius: 16px;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         cursor: pointer;
         text-decoration: none;
         color: inherit;
+        height: 100%;
       }
       .card-modulo:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 18px rgba(46, 125, 50, 0.2);
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(46, 125, 50, 0.15);
         color: inherit;
       }
       .card-modulo .card-body {
-        padding: 1.8rem 1.5rem;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
       }
+
+      /* Íconos interactivos */
       .icono-modulo {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
         background-color: var(--verde-suave);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 1rem;
+        margin-bottom: 1.25rem;
+        transition: all 0.3s ease;
       }
       .icono-modulo i {
-        font-size: 1.6rem;
+        font-size: 1.8rem;
         color: var(--verde);
+        transition: all 0.3s ease;
       }
-      h6.text-muted {
-        font-size: 0.8rem;
+
+      /* Efecto Hover en el ícono */
+      .card-modulo:hover .icono-modulo {
+        background-color: var(--verde);
+        transform: scale(1.05) rotate(-5deg);
       }
-      .titulo-seccion {
-        color: var(--verde);
+      .card-modulo:hover .icono-modulo i {
+        color: white;
+      }
+
+      /* Tipografía de las tarjetas */
+      .card-modulo h5 {
+        color: var(--texto-oscuro);
         font-weight: 700;
-        border-left: 4px solid var(--verde-claro);
-        padding-left: 10px;
+        font-size: 1.15rem;
+        margin-bottom: 0.5rem;
+      }
+      .card-modulo h6.text-muted {
+        font-size: 0.85rem;
+        font-weight: 500;
+        line-height: 1.4;
+        margin: 0;
       }
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-dark navbar-expand-lg">
+    <nav class="navbar navbar-dark navbar-expand-lg sticky-top">
       <div class="container">
         <a class="navbar-brand" href="index.html">
           <i class="bi bi-leaf-fill me-2"></i>HuellaCarbono DB
@@ -86,108 +145,145 @@
       </div>
     </nav>
 
-    <div class="container py-5">
-      <div class="mb-4">
-        <h2 class="titulo-seccion">Panel de Administración</h2>
-        <p class="text-muted mt-2">
-          Gestión de colecciones MongoDB — HuellaCarbonoDB
-        </p>
+    <div class="container py-4">
+      <div class="dashboard-header">
+        <h2>Panel de Administración</h2>
+        <p>Gestión centralizada de colecciones MongoDB para HuellaCarbono</p>
       </div>
 
       <div class="row g-4">
-        <div class="col-sm-6 col-lg-4">
-          <a href="usuarios/index.html" class="card card-modulo d-block">
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="usuarios/index.html" class="card card-modulo">
             <div class="card-body">
               <div class="icono-modulo"><i class="bi bi-people-fill"></i></div>
-              <h5 class="fw-semibold mb-1">Usuarios</h5>
+              <h5>Usuarios</h5>
               <h6 class="text-muted">nombre · email · perfil</h6>
             </div>
           </a>
         </div>
 
-        <div class="col-sm-6 col-lg-4">
-          <a href="retos/index.html" class="card card-modulo d-block">
-            <div class="card-body">
-              <div class="icono-modulo"><i class="bi bi-trophy-fill"></i></div>
-              <h5 class="fw-semibold mb-1">Retos</h5>
-              <h6 class="text-muted">titulo · duración · dificultad</h6>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-sm-6 col-lg-4">
-          <a href="habitos/index.html" class="card card-modulo d-block">
-            <div class="card-body">
-              <div class="icono-modulo">
-                <i class="bi bi-heart-pulse-fill"></i>
-              </div>
-              <h5 class="fw-semibold mb-1">Hábitos</h5>
-              <h6 class="text-muted">descripción · categoría · puntos eco</h6>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-sm-6 col-lg-4">
-          <a href="alimentos/index.html" class="card card-modulo d-block">
-            <div class="card-body">
-              <div class="icono-modulo">
-                <i class="bi bi-basket-fill"></i>
-              </div>
-              <h5 class="fw-semibold mb-1">Alimentos</h5>
-              <h6 class="text-muted">
-                id · categoría · co2 por kg · impacto alto
-              </h6>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-sm-6 col-lg-4">
-          <a href="tiposTransporte/index.html" class="card card-modulo d-block">
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="tiposTransporte/index.html" class="card card-modulo">
             <div class="card-body">
               <div class="icono-modulo">
                 <i class="bi bi-bus-front-fill"></i>
               </div>
-              <h5 class="fw-semibold mb-1">Tipos de Transporte</h5>
+              <h5>Tipos de Transporte</h5>
               <h6 class="text-muted">nombre · factor de emisión</h6>
             </div>
           </a>
         </div>
 
-        <div class="col-sm-6 col-lg-4">
-          <a href="recomendaciones/index.html" class="card card-modulo d-block">
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="alimentos/index.html" class="card card-modulo">
             <div class="card-body">
-              <div class="icono-modulo">
-                <i class="bi bi-lightbulb-fill"></i>
-              </div>
-              <h5 class="fw-semibold mb-1">Recomendaciones</h5>
-              <h6 class="text-muted">tipo · texto · impacto estimado</h6>
+              <div class="icono-modulo"><i class="bi bi-basket2-fill"></i></div>
+              <h5>Alimentos</h5>
+              <h6 class="text-muted">id · categoría · co2 por kg · impacto</h6>
             </div>
           </a>
         </div>
 
-        <div class="col-sm-6 col-lg-4">
-          <a
-            href="registrosDiarios/index.html"
-            class="card card-modulo d-block"
-          >
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="consumoEnergia/index.html" class="card card-modulo">
+            <div class="card-body">
+              <div class="icono-modulo">
+                <i class="bi bi-lightning-charge-fill"></i>
+              </div>
+              <h5>Consumo de Energía</h5>
+              <h6 class="text-muted">id · tipo · unidad · factor</h6>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="habitos/index.html" class="card card-modulo">
+            <div class="card-body">
+              <div class="icono-modulo">
+                <i class="bi bi-heart-pulse-fill"></i>
+              </div>
+              <h5>Hábitos</h5>
+              <h6 class="text-muted">descripción · categoría · puntos eco</h6>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="registrosDiarios/index.html" class="card card-modulo">
             <div class="card-body">
               <div class="icono-modulo">
                 <i class="bi bi-calendar2-check-fill"></i>
               </div>
-              <h5 class="fw-semibold mb-1">Registros Diarios</h5>
+              <h5>Registros Diarios</h5>
               <h6 class="text-muted">usuario · fecha · actividades</h6>
             </div>
           </a>
         </div>
 
-        <div class="col-sm-6 col-lg-4">
-          <a href="calculosCO2/index.html" class="card card-modulo d-block">
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="calculosCO2/index.html" class="card card-modulo">
             <div class="card-body">
               <div class="icono-modulo">
-                <i class="bi bi-cloud-fill"></i>
+                <i class="bi bi-calculator-fill"></i>
               </div>
-              <h5 class="fw-semibold mb-1">Cálculos CO2</h5>
-              <h6 class="text-muted">id · usuario · mes · emisiones</h6>
+              <h5>Cálculos CO2</h5>
+              <h6 class="text-muted">
+                id · usuario · mes · emisiones · unidad
+              </h6>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="retos/index.html" class="card card-modulo">
+            <div class="card-body">
+              <div class="icono-modulo"><i class="bi bi-trophy-fill"></i></div>
+              <h5>Retos</h5>
+              <h6 class="text-muted">título · duración · dificultad</h6>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="participacionesRetos/index.html" class="card card-modulo">
+            <div class="card-body">
+              <div class="icono-modulo"><i class="bi bi-flag-fill"></i></div>
+              <h5>Participaciones</h5>
+              <h6 class="text-muted">id · usuario · reto · estado · fecha</h6>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="recomendaciones/index.html" class="card card-modulo">
+            <div class="card-body">
+              <div class="icono-modulo">
+                <i class="bi bi-lightbulb-fill"></i>
+              </div>
+              <h5>Recomendaciones</h5>
+              <h6 class="text-muted">tipo · texto · impacto estimado</h6>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="categoriaRetos/index.html" class="card card-modulo">
+            <div class="card-body">
+              <div class="icono-modulo"><i class="bi bi-tags-fill"></i></div>
+              <h5>Categoría de Retos</h5>
+              <h6 class="text-muted">id · nombre</h6>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a href="factorPais/index.html" class="card card-modulo">
+            <div class="card-body">
+              <div class="icono-modulo">
+                <i class="bi bi-globe-americas"></i>
+              </div>
+              <h5>Factor de País</h5>
+              <h6 class="text-muted">id · nombre · factor · moneda</h6>
             </div>
           </a>
         </div>

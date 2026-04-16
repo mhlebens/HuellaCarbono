@@ -1,5 +1,15 @@
 const mongoose = require("mongoose");
 
+// const user = db.Usuarios.findOne({ id_usuario: 1 });
+// // 7. Colección CalculosCO2 (Resultados procesados)
+// db.CalculosCO2.insertOne({
+//   id_calculo: 1,
+//   usuario_id: user._id,
+//   mes: "Mayo",
+//   total_emisiones: 120.5,
+//   unidad: "kg"
+// });
+
 const calculoCO2Schema = new mongoose.Schema(
   {
     id_calculo: {

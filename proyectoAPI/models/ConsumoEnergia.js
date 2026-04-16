@@ -1,34 +1,45 @@
 const mongoose = require("mongoose");
 
+// // 4. Colección ConsumoEnergia (Fuentes de energía hogar)
+// db.ConsumoEnergia.insertOne({
+//   id_energia: 1,
+//   tipo: "Electricidad Red Pública",
+//   unidad: "kWh",
+//   factor: 0.45
+// });
+
 const consumoEnergiaSchema = new mongoose.Schema(
   {
-    nombreFuente: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    categoria: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    factorEmisionCO2: {
+    // Mapeado de 'id_energia'
+    id_energia: {
       type: Number,
       required: true,
-      min: 0
+      unique: true, // Asumiendo que es un identificador único
     },
-    unidadMedida: {
+    // Mapeado de 'tipo' (antes nombreFuente/categoria)
+    tipo: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
-    estado: {
+    // Mapeado de 'unidad' (antes unidadMedida)
+    unidad: {
       type: String,
-      enum: ["Activo", "Inactivo"],
-      default: "Activo"
-    }
+      required: true,
+      trim: true,
+    },
+    // Mapeado de 'factor' (antes factorEmisionCO2)
+    factor: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    // Importante: forzar el nombre de la colección si MongoDB la creó en plural o exacto
+    collection: "ConsumoEnergia",
+  },
 );
 
 module.exports = mongoose.model("ConsumoEnergia", consumoEnergiaSchema);

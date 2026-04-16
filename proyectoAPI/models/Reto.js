@@ -1,5 +1,13 @@
 const mongoose = require("mongoose");
 
+// // 8. Colección Retos (Desafíos disponibles)
+// db.Retos.insertOne({
+//   id_reto: 1,
+//   titulo: "Semana sin Plásticos",
+//   duracion_dias: 7,
+//   dificultad: "Media"
+// });
+
 const retoSchema = new mongoose.Schema(
   {
     id_reto: {

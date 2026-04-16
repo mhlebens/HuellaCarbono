@@ -1,5 +1,14 @@
 const mongoose = require("mongoose");
 
+// // 1. Colección Usuarios
+// db.Usuarios.insertOne({
+//   id_usuario: 1,
+//   nombre: "Ana Martínez",
+//   email: "ana@example.com",
+//   fecha_registro: new Date(),
+//   perfil: { pais: "México", nivel_conciencia: "Principiante" }
+// });
+
 // Subdocumento para el campo perfil
 const perfilSchema = new mongoose.Schema(
   {

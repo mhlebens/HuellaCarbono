@@ -10,7 +10,7 @@
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2NPK8M2HN"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
     <link
@@ -21,61 +21,90 @@
       :root {
         --verde: #2e7d32;
         --verde-claro: #4caf50;
+        --verde-suave: #e8f5e9;
       }
       body {
         background-color: #f1f8e9;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
       }
       .navbar {
         background-color: var(--verde) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .titulo-pagina {
+        color: var(--verde);
+        font-weight: 700;
+        border-left: 5px solid var(--verde-claro);
+        padding-left: 15px;
+        margin-bottom: 0;
+      }
+      .card-tabla {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
       }
       .table thead {
         background-color: var(--verde);
         color: white;
       }
-      .titulo-pagina {
-        color: var(--verde);
-        font-weight: 700;
-        border-left: 4px solid var(--verde-claro);
-        padding-left: 10px;
-      }
-      .card-tabla {
+      .table thead th {
+        font-weight: 500;
         border: none;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 15px;
       }
-      td.actividades-col {
-        max-width: 240px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+      .table tbody td {
+        padding: 12px 15px;
+        vertical-align: middle;
+      }
+      .btn-nuevo {
+        background-color: var(--verde);
+        color: white;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+      .btn-nuevo:hover {
+        background-color: var(--verde-claro);
+        color: white;
+        transform: translateY(-2px);
+      }
+      .badge-actividad {
+        background-color: var(--verde-suave);
+        color: var(--verde);
+        border: 1px solid var(--verde-claro);
       }
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-dark navbar-expand-lg">
+    <nav class="navbar navbar-dark navbar-expand-lg mb-4">
       <div class="container">
-        <a class="navbar-brand fw-bold" href="../index.html"
-          ><i class="bi bi-leaf-fill me-2"></i>HuellaCarbono DB</a
-        >
-        <div class="navbar-nav ms-auto">
-          <a class="nav-link text-white" href="../index.html"
-            ><i class="bi bi-grid-fill me-1"></i>Módulos</a
-          >
-        </div>
+        <a class="navbar-brand fw-bold" href="../index.html">
+          <i class="bi bi-leaf-fill me-2"></i>HuellaCarbono DB
+        </a>
       </div>
     </nav>
 
-    <div class="container py-4">
+    <div class="container">
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="titulo-pagina mb-0">
-          <i class="bi bi-calendar2-check-fill me-2"></i>Registros Diarios
-        </h3>
-        <a href="create.html" class="btn btn-success"
-          ><i class="bi bi-plus-lg me-1"></i>Nuevo Registro</a
-        >
+        <div>
+          <h2 class="titulo-pagina">Registros Diarios</h2>
+          <p class="text-muted ms-3 mb-0">
+            Seguimiento de actividades por usuario
+          </p>
+        </div>
+        <a href="create.html" class="btn btn-nuevo shadow-sm">
+          <i class="bi bi-plus-circle me-2"></i>Nuevo Registro
+        </a>
       </div>
 
-      <div id="alerta" class="alert d-none" role="alert"></div>
+      <div id="alerta" class="alert d-none shadow-sm" role="alert"></div>
 
       <div class="card card-tabla">
         <div class="card-body p-0">
@@ -83,33 +112,25 @@
             <table class="table table-hover mb-0">
               <thead>
                 <tr>
-                  <th>ID Registro</th>
+                  <th>ID</th>
                   <th>Usuario</th>
                   <th>Fecha</th>
-                  <th>Transporte</th>
-                  <th>Km / Ducha</th>
+                  <th>Actividades</th>
                   <th class="text-center">Acciones</th>
                 </tr>
               </thead>
-              <tbody id="tablaRegistros">
-                <tr>
-                  <td colspan="5" class="text-center py-4 text-muted">
-                    Cargando datos...
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="listaRegistros"></tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Modal Eliminar -->
     <div class="modal fade" id="modalEliminar" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title text-danger">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title text-danger fw-bold">
               <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar
               Eliminación
             </h5>
@@ -119,23 +140,28 @@
               data-bs-dismiss="modal"
             ></button>
           </div>
-          <div class="modal-body">
-            ¿Estás seguro de que deseas eliminar este registro diario?
+          <div class="modal-body text-center py-4">
+            <p class="mb-0">
+              ¿Estás seguro de que deseas eliminar este registro diario?<br />
+              <small class="text-muted"
+                >Esta acción no se puede deshacer.</small
+              >
+            </p>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer border-0 justify-content-center pb-4">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-outline-secondary px-4"
               data-bs-dismiss="modal"
             >
               Cancelar
             </button>
             <button
               type="button"
-              class="btn btn-danger"
+              class="btn btn-danger px-4"
               id="btnConfirmarEliminar"
             >
-              Eliminar
+              Eliminar Registro
             </button>
           </div>
         </div>
@@ -150,6 +176,64 @@
     <script src="../app.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", obtenerRegistrosDiarios);
+
+      async function obtenerRegistrosDiarios() {
+        try {
+          // Usamos el nombre que coincide con tu backend (registrosDiarios)
+          const registros = await apiFetch(`${BASE_URL}/registrosDiarios`);
+          const tbody = document.getElementById("listaRegistros");
+          tbody.innerHTML = "";
+
+          if (registros.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No hay registros disponibles.</td></tr>`;
+            return;
+          }
+
+          registros.forEach((r) => {
+            // 1. Formateo de fecha
+            const fecha = r.fecha
+              ? new Date(r.fecha).toLocaleDateString()
+              : "Sin fecha";
+
+            // 2. Manejo del Usuario (gracias al .populate de tu ruta)
+            const nombreUsuario = r.usuario_id
+              ? r.usuario_id.nombre
+              : "Usuario no encontrado";
+
+            // 3. Formateo de Actividades (tu modelo es un objeto con campos específicos)
+            let htmlActividades = "";
+            if (r.actividades) {
+              const { km_recorridos, tipo_transporte, ducha_minutos } =
+                r.actividades;
+              htmlActividades = `
+            <span class="badge badge-actividad me-1"><i class="bi bi-bicycle me-1"></i>${km_recorridos} km</span>
+            <span class="badge badge-actividad me-1"><i class="bi bi-car-front me-1"></i>${tipo_transporte}</span>
+            <span class="badge badge-actividad me-1"><i class="bi bi-droplet me-1"></i>${ducha_minutos} min</span>
+          `;
+            }
+
+            tbody.innerHTML += `
+          <tr>
+            <td class="fw-bold text-muted">#${r.id_registro}</td>
+            <td><i class="bi bi-person-circle me-2 text-success"></i>${nombreUsuario}</td>
+            <td><i class="bi bi-calendar-event me-2"></i>${fecha}</td>
+            <td>${htmlActividades}</td>
+            <td class="text-center">
+              <a href="create.html?id=${r._id}" class="btn btn-sm btn-outline-primary me-1 border-0">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+              <button class="btn btn-sm btn-outline-danger border-0" onclick="confirmarEliminar('${r._id}', 'registrosDiarios', obtenerRegistrosDiarios)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+          });
+        } catch (error) {
+          console.error("Error:", error);
+          mostrarAlerta("Error al conectar con la base de datos.", "danger");
+        }
+      }
     </script>
   </body>
 </html>

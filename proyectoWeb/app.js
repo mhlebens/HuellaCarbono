@@ -53,8 +53,6 @@ async function apiFetch(url, opciones = {}) {
 
 // ============================================================
 //  MÓDULO: USUARIOS
-//  Colección: usuarios
-//  Campos: id_usuario, nombre, email, fecha_registro, perfil
 // ============================================================
 
 async function obtenerUsuarios() {
@@ -156,8 +154,6 @@ async function cargarUsuarioEnFormulario(id) {
 
 // ============================================================
 //  MÓDULO: RETOS
-//  Colección: retos
-//  Campos: id_reto, titulo, duracion_dias, dificultad
 // ============================================================
 
 async function obtenerRetos() {
@@ -262,8 +258,6 @@ async function cargarRetoEnFormulario(id) {
 
 // ============================================================
 //  MÓDULO: HÁBITOS
-//  Colección: habitos
-//  Campos: id_habito, descripcion, categoria, puntos_eco
 // ============================================================
 
 async function obtenerHabitos() {
@@ -354,8 +348,6 @@ async function cargarHabitoEnFormulario(id) {
 
 // ============================================================
 //  MÓDULO: TIPOS DE TRANSPORTE
-//  Colección: tiposTransporte
-//  Campos: id_transporte, nombre, factor_emision
 // ============================================================
 
 async function obtenerTiposTransporte() {
@@ -381,7 +373,6 @@ function mostrarTiposTransporte(tipos) {
   }
 
   tipos.forEach((t) => {
-    // Aseguramos que el factor sea numérico antes de usar toFixed
     const factor = t.factor_emision
       ? parseFloat(t.factor_emision).toFixed(4)
       : "0.0000";
@@ -394,7 +385,7 @@ function mostrarTiposTransporte(tipos) {
         <a href="create.html?id=${t.id_transporte}" class="btn btn-sm btn-outline-warning me-1">
           <i class="bi bi-pencil-fill"></i> Editar
         </a>
-        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${t.id_transporte}', 'tiposTransporte')">
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${t.id_transporte}', 'tipos-transporte')">
           <i class="bi bi-trash-fill"></i> Eliminar
         </button>
       </td>`;
@@ -403,17 +394,15 @@ function mostrarTiposTransporte(tipos) {
 }
 
 async function guardarTipoTransporte(id) {
-  // Obtenemos los valores y nos aseguramos de que los números sean números
   const idNum = document.getElementById("id_transporte")?.value.trim();
   const factorVal = document.getElementById("factor_emision")?.value;
 
   const datos = {
-    id_transporte: parseInt(idNum), // Convertir a número
+    id_transporte: parseInt(idNum),
     nombre: document.getElementById("nombre")?.value.trim(),
-    factor_emision: parseFloat(factorVal), // Convertir a número
+    factor_emision: parseFloat(factorVal),
   };
 
-  // Validación básica
   if (
     isNaN(datos.id_transporte) ||
     !datos.nombre ||
@@ -427,7 +416,6 @@ async function guardarTipoTransporte(id) {
   }
 
   try {
-    // Si hay 'id', la URL será /api/tiposTransporte/1 (por ejemplo)
     const url = id
       ? `${BASE_URL}/tipos-transporte/${id}`
       : `${BASE_URL}/tipos-transporte`;
@@ -458,8 +446,6 @@ async function cargarTransporteEnFormulario(id) {
       document.getElementById("id_transporte").value = t.id_transporte || "";
       document.getElementById("nombre").value = t.nombre || "";
       document.getElementById("factor_emision").value = t.factor_emision ?? "";
-
-      // Opcional: Bloquear el id_transporte si estás editando para que no lo cambien
       document.getElementById("id_transporte").readOnly = true;
     }
   } catch (error) {
@@ -469,8 +455,6 @@ async function cargarTransporteEnFormulario(id) {
 
 // ============================================================
 //  MÓDULO: RECOMENDACIONES
-//  Colección: recomendaciones
-//  Campos: id_recomendacion, tipo, texto, impacto_estimado
 // ============================================================
 
 async function obtenerRecomendaciones() {
@@ -503,10 +487,10 @@ function mostrarRecomendaciones(recomendaciones) {
       <td style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.texto}">${r.texto}</td>
       <td>${r.impacto_estimado || "—"}</td>
       <td class="text-center">
-        <a href="create.html?id=${r._id}" class="btn btn-sm btn-outline-warning me-1">
+        <a href="create.html?id=${r.id_recomendacion}" class="btn btn-sm btn-outline-warning me-1">
           <i class="bi bi-pencil-fill"></i> Editar
         </a>
-        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${r._id}', 'recomendaciones')">
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${r.id_recomendacion}', 'recomendaciones')">
           <i class="bi bi-trash-fill"></i> Eliminar
         </button>
       </td>`;
@@ -560,8 +544,6 @@ async function cargarRecomendacionEnFormulario(id) {
 
 // ============================================================
 //  MÓDULO: REGISTROS DIARIOS
-//  Colección: registrosDiarios
-//  Campos: id_registro, usuario_id, fecha, actividades (array)
 // ============================================================
 
 async function obtenerRegistrosDiarios() {
@@ -613,7 +595,6 @@ function mostrarRegistrosDiarios(registros) {
 }
 
 async function guardarRegistroDiario(id) {
-  // Recoge todas las actividades del formulario dinámico
   const actividades = Array.from(document.querySelectorAll(".actividad-input"))
     .map((el) => el.value.trim())
     .filter(Boolean);
@@ -657,7 +638,6 @@ async function cargarRegistroEnFormulario(id) {
         .toISOString()
         .split("T")[0];
 
-    // Reconstruir filas de actividades
     const contenedor = document.getElementById("listaActividades");
     if (contenedor) {
       contenedor.innerHTML = "";
@@ -674,7 +654,6 @@ async function cargarRegistroEnFormulario(id) {
   }
 }
 
-/** Agrega una fila de actividad al formulario de RegistrosDiarios */
 function agregarFilaActividad(valor = "") {
   const contenedor = document.getElementById("listaActividades");
   if (!contenedor) return;
@@ -688,7 +667,6 @@ function agregarFilaActividad(valor = "") {
     </button>`;
   contenedor.appendChild(div);
 
-  // Quitar fila
   div.querySelector(".btn-quitar-act").addEventListener("click", () => {
     const items = contenedor.querySelectorAll(".actividad-item");
     if (items.length > 1) div.remove();
@@ -698,8 +676,6 @@ function agregarFilaActividad(valor = "") {
 
 // ============================================================
 //  MÓDULO: ALIMENTOS
-//  Colección: Alimentos
-//  Campos: id_alimento, categoria, impacto_alto, co2_por_kg
 // ============================================================
 
 async function obtenerAlimentos() {
@@ -798,9 +774,181 @@ async function cargarAlimentoEnFormulario(id) {
 }
 
 // ============================================================
+//  MÓDULO: ConsumoEnergia
+// ============================================================
+
+async function obtenerConsumosEnergia() {
+  try {
+    const consumos = await apiFetch(`${BASE_URL}/consumos-energia`);
+    mostrarConsumosEnergia(consumos);
+  } catch {
+    mostrarAlerta("Error al cargar los consumos de energía.", "danger");
+  }
+}
+
+function mostrarConsumosEnergia(consumos) {
+  const tabla = document.getElementById("tablaEnergia");
+  if (!tabla) return;
+  const tbody = tabla.querySelector("tbody") || tabla;
+  tbody.innerHTML = "";
+
+  if (!consumos.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">No hay consumos registrados.</td></tr>`;
+    return;
+  }
+
+  consumos.forEach((c) => {
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${c.id_energia ?? "—"}</td>
+      <td>${c.tipo || "—"}</td>
+      <td>${c.unidad || "—"}</td>
+      <td>${c.factor ?? "—"}</td>
+      <td class="text-center">
+        <a href="create.html?id=${c._id}" class="btn btn-sm btn-outline-warning me-1">
+          <i class="bi bi-pencil-fill"></i> Editar
+        </a>
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${c._id}', 'consumos-energia')">
+          <i class="bi bi-trash-fill"></i> Eliminar
+        </button>
+      </td>`;
+    tbody.appendChild(fila);
+  });
+}
+
+async function guardarConsumoEnergia(id) {
+  const datos = {
+    id_energia: parseInt(document.getElementById("id_energia")?.value),
+    tipo: document.getElementById("tipo")?.value.trim(),
+    unidad: document.getElementById("unidad")?.value.trim(),
+    factor: parseFloat(document.getElementById("factor")?.value),
+  };
+
+  if (
+    isNaN(datos.id_energia) ||
+    !datos.tipo ||
+    !datos.unidad ||
+    isNaN(datos.factor)
+  ) {
+    mostrarAlerta(
+      "Por favor completa todos los campos correctamente.",
+      "danger",
+    );
+    return;
+  }
+
+  try {
+    const url = id
+      ? `${BASE_URL}/consumos-energia/${id}`
+      : `${BASE_URL}/consumos-energia`;
+    const method = id ? "PUT" : "POST";
+    await apiFetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos),
+    });
+    mostrarAlerta(
+      id ? "Consumo de energía actualizado." : "Consumo de energía creado.",
+    );
+    redirigir("index.html");
+  } catch {
+    mostrarAlerta("Error al guardar el consumo de energía.", "danger");
+  }
+}
+
+async function cargarConsumoEnergiaEnFormulario(id) {
+  try {
+    const c = await apiFetch(`${BASE_URL}/consumos-energia/${id}`);
+    document.getElementById("id_energia").value = c.id_energia ?? "";
+    document.getElementById("tipo").value = c.tipo || "";
+    document.getElementById("unidad").value = c.unidad || "";
+    document.getElementById("factor").value = c.factor ?? "";
+  } catch {
+    mostrarAlerta("No se pudo cargar el consumo de energía.", "danger");
+  }
+}
+
+// ============================================================
+//  MÓDULO: CategoriaRetos
+// ============================================================
+
+async function obtenerCategoriasRetos() {
+  try {
+    const categorias = await apiFetch(`${BASE_URL}/categorias-retos`);
+    mostrarCategoriasRetos(categorias);
+  } catch {
+    mostrarAlerta("Error al cargar las categorías de retos.", "danger");
+  }
+}
+
+function mostrarCategoriasRetos(categorias) {
+  const tabla = document.getElementById("tablaCategoria");
+  if (!tabla) return;
+  const tbody = tabla.querySelector("tbody") || tabla;
+  tbody.innerHTML = "";
+
+  if (!categorias.length) {
+    tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-muted">No hay categorías registradas.</td></tr>`;
+    return;
+  }
+
+  categorias.forEach((c) => {
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${c.id_categoria ?? "—"}</td>
+      <td>${c.nombre || "—"}</td>
+      <td class="text-center">
+        <a href="create.html?id=${c._id}" class="btn btn-sm btn-outline-warning me-1">
+          <i class="bi bi-pencil-fill"></i> Editar
+        </a>
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${c._id}', 'categorias-retos')">
+          <i class="bi bi-trash-fill"></i> Eliminar
+        </button>
+      </td>`;
+    tbody.appendChild(fila);
+  });
+}
+
+async function guardarCategoriaReto(id) {
+  const datos = {
+    id_categoria: parseInt(document.getElementById("id_categoria")?.value),
+    nombre: document.getElementById("nombre")?.value.trim(),
+  };
+
+  if (isNaN(datos.id_categoria) || !datos.nombre) {
+    mostrarAlerta("Por favor completa todos los campos requeridos.", "danger");
+    return;
+  }
+
+  try {
+    const url = id
+      ? `${BASE_URL}/categorias-retos/${id}`
+      : `${BASE_URL}/categorias-retos`;
+    const method = id ? "PUT" : "POST";
+    await apiFetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos),
+    });
+    mostrarAlerta(id ? "Categoría actualizada." : "Categoría creada.");
+    redirigir("index.html");
+  } catch {
+    mostrarAlerta("Error al guardar la categoría.", "danger");
+  }
+}
+
+async function cargarCategoriaRetoEnFormulario(id) {
+  try {
+    const c = await apiFetch(`${BASE_URL}/categorias-retos/${id}`);
+    document.getElementById("id_categoria").value = c.id_categoria ?? "";
+    document.getElementById("nombre").value = c.nombre || "";
+  } catch {
+    mostrarAlerta("No se pudo cargar la categoría.", "danger");
+  }
+}
+
+// ============================================================
 //  MÓDULO: CÁLCULOS CO2
-//  Colección: CalculosCO2
-//  Campos: id_calculo, usuario_id, mes, total_emisiones, unidad
 // ============================================================
 
 async function obtenerCalculosCO2() {
@@ -942,6 +1090,214 @@ async function cargarCalculoCO2EnFormulario(id) {
 }
 
 // ============================================================
+//  MÓDULO: FactorPais
+// ============================================================
+
+async function obtenerFactoresPaises() {
+  try {
+    const factores = await apiFetch(`${BASE_URL}/factores-paises`);
+    mostrarFactoresPaises(factores);
+  } catch {
+    mostrarAlerta("Error al cargar los factores país.", "danger");
+  }
+}
+
+function mostrarFactoresPaises(factores) {
+  const tabla = document.getElementById("tablaFactoresPaises");
+  if (!tabla) return;
+  tabla.innerHTML = "";
+
+  if (!factores.length) {
+    tabla.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No hay factores país registrados.</td></tr>`;
+    return;
+  }
+
+  factores.forEach((f) => {
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${f.id_pais ?? "—"}</td>
+      <td>${f.nombre_pais || "—"}</td>
+      <td>${f.factor_electricidad ?? "—"}</td>
+      <td>${f.moneda || "—"}</td>
+      <td class="text-center">
+        <a href="create.html?id=${f._id}" class="btn btn-sm btn-outline-warning me-1">
+          <i class="bi bi-pencil-fill"></i> Editar
+        </a>
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${f._id}', 'factores-paises')">
+          <i class="bi bi-trash-fill"></i> Eliminar
+        </button>
+      </td>`;
+    tabla.appendChild(fila);
+  });
+}
+
+async function guardarFactorPais(id) {
+  const datos = {
+    id_pais: parseInt(document.getElementById("id_pais")?.value),
+    nombre_pais: document.getElementById("nombre_pais")?.value.trim(),
+    factor_electricidad: parseFloat(
+      document.getElementById("factor_electricidad")?.value,
+    ),
+    moneda: document.getElementById("moneda")?.value.trim(),
+  };
+
+  if (
+    isNaN(datos.id_pais) ||
+    !datos.nombre_pais ||
+    isNaN(datos.factor_electricidad) ||
+    !datos.moneda
+  ) {
+    mostrarAlerta("Por favor completa todos los campos requeridos.", "danger");
+    return;
+  }
+
+  try {
+    const url = id ? `${BASE_URL}/factores-paises/${id}` : `${BASE_URL}/factores-paises`;
+    const method = id ? "PUT" : "POST";
+
+    await apiFetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos),
+    });
+
+    mostrarAlerta(
+      id
+        ? "Factor país actualizado correctamente."
+        : "Factor país creado correctamente.",
+    );
+    redirigir("index.html");
+  } catch {
+    mostrarAlerta("Error al guardar el factor país.", "danger");
+  }
+}
+
+async function cargarFactorPaisEnFormulario(id) {
+  try {
+    const f = await apiFetch(`${BASE_URL}/factores-paises/${id}`);
+
+    document.getElementById("id_pais").value = f.id_pais ?? "";
+    document.getElementById("nombre_pais").value = f.nombre_pais || "";
+    document.getElementById("factor_electricidad").value =
+      f.factor_electricidad ?? "";
+    document.getElementById("moneda").value = f.moneda || "";
+  } catch {
+    mostrarAlerta("No se pudo cargar el factor país.", "danger");
+  }
+}
+
+// ============================================================
+//  MÓDULO: ParticipacionReto
+// ============================================================
+
+async function obtenerParticipacionesRetos() {
+  try {
+    const participaciones = await apiFetch(`${BASE_URL}/participaciones-retos`);
+    mostrarParticipacionesRetos(participaciones);
+  } catch {
+    mostrarAlerta("Error al cargar las participaciones de retos.", "danger");
+  }
+}
+
+function mostrarParticipacionesRetos(participaciones) {
+  const tabla = document.getElementById("tablaParticipacionesRetos");
+  if (!tabla) return;
+  tabla.innerHTML = "";
+
+  if (!participaciones.length) {
+    tabla.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No hay participaciones registradas.</td></tr>`;
+    return;
+  }
+
+  participaciones.forEach((p) => {
+    const fechaInicio = p.fecha_inicio
+      ? new Date(p.fecha_inicio).toLocaleDateString("es-CR")
+      : "—";
+
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${p.id_participacion ?? "—"}</td>
+      <td>${p.usuario_id?._id || p.usuario_id || "—"}</td>
+      <td>${p.reto_id?._id || p.reto_id || "—"}</td>
+      <td>${fechaInicio}</td>
+      <td><span class="badge bg-primary">${p.estado || "—"}</span></td>
+      <td class="text-center">
+        <a href="create.html?id=${p._id}" class="btn btn-sm btn-outline-warning me-1">
+          <i class="bi bi-pencil-fill"></i> Editar
+        </a>
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('${p._id}', 'participaciones-retos')">
+          <i class="bi bi-trash-fill"></i> Eliminar
+        </button>
+      </td>`;
+    tabla.appendChild(fila);
+  });
+}
+
+async function guardarParticipacionReto(id) {
+  const datos = {
+    id_participacion: parseInt(
+      document.getElementById("id_participacion")?.value,
+    ),
+    usuario_id: document.getElementById("usuario_id")?.value.trim(),
+    reto_id: document.getElementById("reto_id")?.value.trim(),
+    fecha_inicio: document.getElementById("fecha_inicio")?.value || null,
+    estado: document.getElementById("estado")?.value,
+  };
+
+  if (
+    isNaN(datos.id_participacion) ||
+    !datos.usuario_id ||
+    !datos.reto_id ||
+    !datos.fecha_inicio ||
+    !datos.estado
+  ) {
+    mostrarAlerta("Por favor completa todos los campos requeridos.", "danger");
+    return;
+  }
+
+  try {
+    const url = id
+      ? `${BASE_URL}/participaciones-retos/${id}`
+      : `${BASE_URL}/participaciones-retos`;
+    const method = id ? "PUT" : "POST";
+
+    await apiFetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos),
+    });
+
+    mostrarAlerta(
+      id
+        ? "Participación actualizada correctamente."
+        : "Participación creada correctamente.",
+    );
+    redirigir("index.html");
+  } catch {
+    mostrarAlerta("Error al guardar la participación.", "danger");
+  }
+}
+
+async function cargarParticipacionRetoEnFormulario(id) {
+  try {
+    const p = await apiFetch(`${BASE_URL}/participaciones-retos/${id}`);
+
+    document.getElementById("id_participacion").value =
+      p.id_participacion ?? "";
+    document.getElementById("usuario_id").value =
+      p.usuario_id?._id || p.usuario_id || "";
+    document.getElementById("reto_id").value =
+      p.reto_id?._id || p.reto_id || "";
+    document.getElementById("fecha_inicio").value = p.fecha_inicio
+      ? new Date(p.fecha_inicio).toISOString().split("T")[0]
+      : "";
+    document.getElementById("estado").value = p.estado || "En progreso";
+  } catch {
+    mostrarAlerta("No se pudo cargar la participación.", "danger");
+  }
+}
+
+// ============================================================
 //  ELIMINAR — función genérica usada por todos los módulos
 // ============================================================
 
@@ -981,11 +1337,16 @@ async function ejecutarEliminar() {
       retos: obtenerRetos,
       habitos: obtenerHabitos,
       alimentos: obtenerAlimentos,
-      tiposTransporte: obtenerTiposTransporte,
+      "tipos-transporte": obtenerTiposTransporte,
       recomendaciones: obtenerRecomendaciones,
       registrosDiarios: obtenerRegistrosDiarios,
       "calculos-co2": obtenerCalculosCO2,
+      "consumos-energia": obtenerConsumosEnergia,
+      "categorias-retos": obtenerCategoriasRetos,
+      "factores-paises": obtenerFactoresPaises,
+      "participaciones-retos": obtenerParticipacionesRetos,
     };
+
     if (_callbackLista) _callbackLista();
     else if (recargadores[_colEliminar]) recargadores[_colEliminar]();
   } catch {

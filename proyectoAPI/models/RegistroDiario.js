@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+// // 6. Colección RegistrosDiarios (Referencia al _id del Usuario)
+// // Aquí usamos el _id del usuario creado anteriormente para la relación
+// const user = db.Usuarios.findOne({ id_usuario: 1 });
+
+// db.RegistrosDiarios.insertOne({
+//   id_registro: 1,
+//   usuario_id: user._id, // Referencia interna
+//   fecha: "2024-05-20",
+//   actividades: {
+//     km_recorridos: 15,
+//     tipo_transporte: "Bicicleta",
+//     ducha_minutos: 10
+//   }
+// });
+
 const actividadesSchema = new mongoose.Schema(
   {
     km_recorridos: {

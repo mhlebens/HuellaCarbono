@@ -1,5 +1,13 @@
 const mongoose = require("mongoose");
 
+// // 5. Colección Habitos (Definiciones de hábitos a seguir)
+// db.Habitos.insertOne({
+//   id_habito: 1,
+//   descripcion: "Usar bicicleta para ir al trabajo",
+//   categoria: "Transporte",
+//   puntos_eco: 50
+// });
+
 const habitoSchema = new mongoose.Schema(
   {
     id_habito: {

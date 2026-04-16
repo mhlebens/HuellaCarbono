@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const TipoTransporte = require("../models/TipoTransporte");
 
-// 1. Obtener todos (Para cargar la tabla o el select en la web)
+// 1. Obtener todos
 router.get("/", async (req, res) => {
   try {
     const data = await TipoTransporte.find();
@@ -14,10 +14,10 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 2. Obtener uno solo por su ID numérico
+// 2. Obtener uno solo por _id (Corregido para app.js)
 router.get("/:id", async (req, res) => {
   try {
-    const data = await TipoTransporte.findOne({ id_transporte: req.params.id });
+    const data = await TipoTransporte.findById(req.params.id);
     if (!data) return res.status(404).json({ mensaje: "No encontrado" });
     res.json(data);
   } catch (error) {
@@ -25,7 +25,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// 3. Crear (POST)
+// 3. Crear
 router.post("/", async (req, res) => {
   try {
     const data = await TipoTransporte.create(req.body);
@@ -35,13 +35,13 @@ router.post("/", async (req, res) => {
   }
 });
 
-// 4. Actualizar (PUT) - Buscando por id_transporte
+// 4. Actualizar (PUT) - Cambiado a findByIdAndUpdate
 router.put("/:id", async (req, res) => {
   try {
-    const data = await TipoTransporte.findOneAndUpdate(
-      { id_transporte: req.params.id },
+    const data = await TipoTransporte.findByIdAndUpdate(
+      req.params.id,
       req.body,
-      { new: true },
+      { new: true, runValidators: true },
     );
     if (!data) return res.status(404).json({ mensaje: "No encontrado" });
     res.json(data);
@@ -52,12 +52,10 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// 5. Eliminar (DELETE) - Buscando por id_transporte
+// 5. Eliminar (DELETE) - Cambiado a findByIdAndDelete
 router.delete("/:id", async (req, res) => {
   try {
-    const data = await TipoTransporte.findOneAndDelete({
-      id_transporte: req.params.id,
-    });
+    const data = await TipoTransporte.findByIdAndDelete(req.params.id);
     if (!data) return res.status(404).json({ mensaje: "No encontrado" });
     res.json({ mensaje: "Eliminado correctamente" });
   } catch (error) {
