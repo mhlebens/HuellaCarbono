@@ -1,0 +1,22 @@
+<form onsubmit="guardarConsumo(event)">
+    <input type="text" id="usuario" placeholder="Usuario" required>
+    <input type="number" id="kwh" placeholder="KWH" required>
+    <button type="submit">Guardar</button>
+</form>
+
+<script>
+    function guardarConsumo(e) {
+        e.preventDefault();
+
+        const usuario = document.getElementById("usuario").value;
+        const kwh = document.getElementById("kwh").value;
+
+        fetch(`${BASE_URL}/consumoEnergia`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ usuario, kwh })
+        });
+    }
+</script>
